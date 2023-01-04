@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>COVID-Defender</title>
+
+    <link rel="stylesheet" type="text/css" href="../common/style.css" />
+
+    <script type="text/javascript" src="../lib/dat.gui.min.js"></script>
+    <script type="text/javascript" src="../lib/gl-matrix-min.js"></script>
+    <script type="module" src="/app/Main.js"></script>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div class="fullscreen" id="game">
+      <canvas></canvas>
+    </div>
+    <div class="startup" id="startup">
+      <span>WELCOME TO COVID-19 DEFENDER</span><br /><br />
+      <span
+        >Evropski svet se je odločil, da nam bo za boj proti korona virusu
+        podaril 100€ in nas za vsak uspešen uboj nagradil z 1€.</span
+      ><br /><br />
+      <span
+        >Ker virus rad mutira se rabite spopasti proti tremi različicami:</span
+      ><br /><br />
+      <span style="float: left">
+        <img src="./common/images/virus1.png" style="float: left" />
+        Prva različica virusa, najlažje obvladljiva in najbolj pogosta.<br
+      /></span>
+      <span style="float: left">
+        <img src="./common/images/virus2.png" style="float: left" />
+        Druga različica virusa, težje obvladljiva in malo manj pogosta.<br
+      /></span>
+      <span style="float: left">
+        <img src="./common/images/virus3.png" style="float: left" />
+        Tretja različica virusa, nova različica, zelo težko obvladljiva.<br /></span
+      ><br />
+      <span
+        >Na voljo imate tri različne turrete, prvi stane 25€, prva nadgradnja
+        stane 40€, za zadnjo nadgradnjo pa boste odšteli 60€</span
+      ><br /><br /><br />
+      <span
+        >Za dodajanje turretov, si izberete eno izmed mnogih lokacij, ki so na
+        voljo na mapi in jo vnesete v okno mapSelection in kliknite gumb
+        dodaj_Nadgradi</span
+      ><br /><br /><br />
+      <span
+        >Za nadgrajevanje turretov ponovno kliknite gumb dodaj_nadgradi, za
+        odstranjevanje pa je na voljo gumb odstrani_Turret. </span
+      ><br /><br /><br />
+      <span>Da zančnete nov val kliknite gumb begin </span
+      ><br /><br /><br /><br />
+      <button
+        id="button"
+        onclick="getElementById('game').style.filter = 'none'; getElementById('overlay').style.display = 'block'; getElementById('startup').style.display = 'none'; "
+      >
+        START GAME
+      </button>
+    </div>
+    <div class="gameover" id="gameover">
+      <span style="font-size: 36px">GAME OVER</span><br /><br />
+      <span id="result"></span><br /><br /><br />
+      <button id="button2" onclick="location.reload(true)">GO AGAIN</button>
+    </div>
+    <div class="gamewin" id="gamewin">
+      <span style="font-size: 36px">YOU WIN!</span><br /><br /><br /><br />
+      <button id="button2" onclick="location.reload(true)">TRY AGAIN</button>
+    </div>
+    <div class="overlay" id="overlay">
+      <div>HEALTH: <span id="health"></span></div>
+      <div>MONEY: <span id="money"></span></div>
+      <div>WAVE: <span id="wave"></span></div>
+    </div>
+  </body>
+</html>
