@@ -64,7 +64,7 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_tiles = 4;
+    this.n_of_tiles = 10;
     this.addTiles();    
     
     this.keydownHandler = this.keydownHandler.bind(this);
