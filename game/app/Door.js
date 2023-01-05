@@ -1,9 +1,8 @@
 import { Node } from "./Node.js";
 
-export class Tile extends Node {
-  constructor(options, model, t, type) {
+export class Door extends Node {
+  constructor(options, model, t) {
     super(options);
-    this.type = type;
     this.scale = model.scale;
     this.mesh = model.mesh;
     this.translation = t;

@@ -7,6 +7,7 @@ import { Renderer } from "./Renderer.js";
 import { Player } from "./Player.js";
 import { Tile } from "./Tile.js";
 import { Crop } from "./Crop.js";
+import { Door } from "./Door.js";
 
 class App extends Application {
   constructor(canvas, glOptions) {
@@ -25,7 +26,7 @@ class App extends Application {
     this.camera = await this.loader.loadNode("Camera");
 
     this.hotbar_selector = document.getElementsByClassName("selector");    
-    this.hotbar = [["hoe", 1], ["carrot", 5], ["eggplant", 5], ["salad", 1], ["pumpkin", 2], ["wheat", 3], ["beetroot", 4]];
+    this.hotbar = [["hoe", 1]];
     this.hotbar_index = 0;
 
     this.carrot_icon = document.getElementById("carrot_icon");
@@ -34,12 +35,30 @@ class App extends Application {
     this.eggplant_icon = document.getElementById("eggplant_icon");
     this.beetroot_icon = document.getElementById("beetroot_icon");
     this.salad_icon = document.getElementById("salad_icon");
-
     this.hoe_icon = document.getElementById("hoe_icon");
+
+    this.shop_carrot = document.getElementById("shop_carrot");
+    this.shop_pumpkin = document.getElementById("shop_pumpkin");
+    this.shop_wheat = document.getElementById("shop_wheat");
+    this.shop_eggplant = document.getElementById("shop_eggplant");
+    this.shop_beetroot = document.getElementById("shop_beetroot");
+    this.shop_salad = document.getElementById("shop_salad");   
+
+    this.shop_carrot.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_pumpkin.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_wheat.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_eggplant.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_beetroot.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_salad.addEventListener('click', (e) => this.buyItem(e));
+
+    this.counters = [document.getElementById("c1"), document.getElementById("c2"), document.getElementById("c3"), document.getElementById("c4"), document.getElementById("c5"), document.getElementById("c6"), document.getElementById("c7"), document.getElementById("c8"), document.getElementById("c9")]
+
+    this.shop_bg = document.getElementById("shop_bg");
     
     this.scene.players = [];
     this.scene.tiles = [];
     this.scene.crops = [];
+    this.scene.doors = [];
     
     
     if (!this.scene || !this.camera) {
@@ -54,6 +73,7 @@ class App extends Application {
     this.grass_tile_model = await this.loader.loadNode("tile0");
     this.farm_tile_model = await this.loader.loadNode("tile1");
     this.seed_model = await this.loader.loadNode("seeds");
+    this.door_model = await this.loader.loadNode("Barndoor");
     this.crops_models = {
       pumpkin: [await this.loader.loadNode("pumpkin0"), await this.loader.loadNode("pumpkin1"), await this.loader.loadNode("pumpkin2")],
       salad: [await this.loader.loadNode("salad0"), await this.loader.loadNode("salad1"), await this.loader.loadNode("salad2")],
@@ -62,10 +82,11 @@ class App extends Application {
       carrot: [await this.loader.loadNode("carrot0"), await this.loader.loadNode("carrot1"), await this.loader.loadNode("carrot2")],
       beetroot: [await this.loader.loadNode("beetroot0"), await this.loader.loadNode("beetroot1"), await this.loader.loadNode("beetroot2")]
     };
+    
 
     this.renderer = new Renderer(this.gl);
     this.renderer.prepareScene(this.scene);
-    this.renderer.prepareNode(this.player_model);
+    //this.renderer.prepareNode(this.player_model);
 
 
     this.resize();
@@ -77,14 +98,32 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_tiles = 10;
-    this.addTiles();    
+    this.n_of_tiles = 100;
+    this.addTiles();
+    this.addDoor();    
     
     this.keydownHandler = this.keydownHandler.bind(this);
     this.keyupHandler = this.keyupHandler.bind(this);
     this.keys = {};
     document.addEventListener("keydown", this.keydownHandler);
     document.addEventListener("keyup", this.keyupHandler);
+  }
+
+  buyItem(e) {
+    //console.log(e.target.getAttribute('value'));
+    let type = e.target.getAttribute('value');
+    console.log(type);
+    let found = false;
+    for(let i = 0; i < this.hotbar.length; i++) {      
+      if(this.hotbar[i][0] == type) {
+        this.hotbar[i][1] += 1;
+        found = true;
+        break;
+      }      
+    }
+    if(!found) {
+      this.hotbar.push([type, 1]);
+    }
   }
 
   addTiles() {    
@@ -108,13 +147,29 @@ class App extends Application {
   }
 
   addPlayer() {
-    //console.log(this.enemies);
     const t = Object.create(this.player_model.translation);
     let p = new Player(
       t,
       this.player_model
     );
     this.scene.players.push(p);
+  }
+
+  addDoor() {
+    const t = Object.create(this.door_model.translation);
+    let p = new Door(
+      t,
+      this.door_model,
+      Object.create([6, 2.2, 0])
+    );
+    this.scene.doors.push(p);
+
+    p = new Door(
+      t,
+      this.door_model,
+      Object.create([10, 2.2, 0])
+    );
+    this.scene.doors.push(p);
   }
 
   enableCamera() {
@@ -133,6 +188,45 @@ class App extends Application {
     }
   }
 
+  openDoors() {
+    if (this.scene.doors[0].translation[0] > 5) {
+      this.scene.doors[0].translation[0] -= 0.05;
+    }
+    else {
+      this.shop_bg.style.display = "initial";
+      this.shop_carrot.style.display = "initial";
+      this.shop_pumpkin.style.display = "initial";
+      this.shop_wheat.style.display = "initial"; 
+      this.shop_eggplant.style.display = "initial";
+      this.shop_beetroot.style.display = "initial";
+      this.shop_salad.style.display = "initial"; 
+    }      
+    if (this.scene.doors[1].translation[0] < 11) {
+      this.scene.doors[1].translation[0] += 0.05;
+    }
+    this.scene.doors[0].updateMatrix();
+    this.scene.doors[1].updateMatrix();
+  }
+
+  closeDoors() {
+    this.shop_bg.style.display = "none";
+    this.shop_carrot.style.display = "none";
+    this.shop_pumpkin.style.display = "none";
+    this.shop_wheat.style.display = "none"; 
+    this.shop_eggplant.style.display = "none";
+    this.shop_beetroot.style.display = "none";
+    this.shop_salad.style.display = "none"; 
+
+    if (this.scene.doors[0].translation[0] < 6) {
+      this.scene.doors[0].translation[0] += 0.05;
+    }      
+    if (this.scene.doors[1].translation[0] > 10) {
+      this.scene.doors[1].translation[0] -= 0.05;
+    }
+    this.scene.doors[0].updateMatrix();
+    this.scene.doors[1].updateMatrix();
+  }
+
   update() {
     const t = (this.time = Date.now());
     const dt = (this.time - this.startTime) * 0.001;
@@ -146,35 +240,47 @@ class App extends Application {
         this.beetroot_icon.style.display = "none";
         this.pumpkin_icon.style.display = "none";
         this.hoe_icon.style.display = "none"
+        for(let i = 0; i < 9; i++) {
+          this.counters[i].style.display = "none";
+        }
+
         for(let i = 0; i < this.hotbar.length; i++) {
           //console.log(this.hotbar[i][0]);
+          if(this.hotbar[i][1] > 1){
+            this.counters[i].innerHTML = this.hotbar[i][1];            
+            this.counters[i].style.display = "initial";
+          }
+          if(this.hotbar[i][1] > 99999){
+            this.counters[i].innerHTML = "99999+";            
+            this.counters[i].style.display = "initial";
+          }
           if(this.hotbar[i][0] == "hoe") {
             this.hoe_icon.style.display = "initial";
-            this.hoe_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.hoe_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";            
           }
           if(this.hotbar[i][0] == "carrot") {
             this.carrot_icon.style.display = "initial";
-            this.carrot_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.carrot_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
           if(this.hotbar[i][0] == "salad") {
             this.salad_icon.style.display = "initial";
-            this.salad_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.salad_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
           if(this.hotbar[i][0] == "eggplant") {
             this.eggplant_icon.style.display = "initial";
-            this.eggplant_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.eggplant_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
           if(this.hotbar[i][0] == "wheat") {
             this.wheat_icon.style.display = "initial";
-            this.wheat_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.wheat_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
           if(this.hotbar[i][0] == "beetroot") {
             this.beetroot_icon.style.display = "initial";
-            this.beetroot_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.beetroot_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
           if(this.hotbar[i][0] == "pumpkin") {
             this.pumpkin_icon.style.display = "initial";
-            this.pumpkin_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+            this.pumpkin_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";
           }
         } 
       }
@@ -183,10 +289,10 @@ class App extends Application {
         for(let i = 1; i < 10; i++) {
           if(this.keys["Digit" + i]) {
             this.hotbar_index = i - 1;
-            this.hotbar_selector[0].style.left = " calc(50vw - 482px + calc("+ (i - 1) +" * 92px)";
+            this.hotbar_selector[0].style.left = " calc(50vw - 432px + calc("+ (i - 1) +" * 92px)";
           }
         }        
-      }
+      }      
 
       if (this.camera) {
         this.camera.update(dt);
@@ -212,8 +318,11 @@ class App extends Application {
       let i = Math.round(this.scene.players[0].translation[0] / 2);
       let j = Math.round(this.scene.players[0].translation[2] / 2);
 
-      if(i == 0 && j == 0) {
-        console.log("shop");
+      if((i >= 3 && i <= 7) && (j == 0 || j == 1)) {
+        this.openDoors();
+      }
+      else {
+        this.closeDoors();
       }
       
       if (this.keys["Space"]) {        
@@ -234,20 +343,44 @@ class App extends Application {
               );
             }
           }
-          else if(this.scene.tiles[i][j].type == "farm") {
-            let type = 0;
-            if(this.hotbar[this.hotbar_index]) {
-              type = this.hotbar[this.hotbar_index][0];
+          else if(this.scene.tiles[i][j].type == "farm") {            
+            if(this.scene.crops[i][j] == null) {
+              let type = 0;
+              if(this.hotbar[this.hotbar_index]) {
+                type = this.hotbar[this.hotbar_index][0];
+              }
+              if(Object.keys(this.crops_models).includes(type)) {
+                let t = 0;
+                this.scene.crops[i][j] = new Crop(
+                  t,
+                  this.seed_model,
+                  Object.create([i * 2, 1.6, j * 2]),
+                  type,
+                  this.crops_models[type]
+                );
+                this.hotbar[this.hotbar_index][1] -= 1;
+                if(this.hotbar[this.hotbar_index][1] == 0) {
+                  this.hotbar.splice(this.hotbar_index, 1);
+                }
+              }
             }
-            if(Object.keys(this.crops_models).includes(type)) {
-              let t = 0;
-              this.scene.crops[i][j] = new Crop(
-                t,
-                this.seed_model,
-                Object.create([i * 2, 1.6, j * 2]),
-                type,
-                this.crops_models[type]
-              );
+            else {             
+              if(this.hotbar_index == 0 && this.scene.crops[i][j].state == 3) {                
+                let found = false;
+                console.log(this.scene.crops[i][j].type);
+                let type = this.scene.crops[i][j].type;
+                for(let i = 0; i < this.hotbar.length; i++) {    
+                  if(this.hotbar[i][0] == type) {
+                    this.hotbar[i][1] += parseInt(Math.random() * 3) + 1;
+                    found = true;
+                    break;
+                  }      
+                }
+                if(!found) {
+                  this.hotbar.push([type, parseInt(Math.random() * 3) + 1]);
+                }
+                this.scene.crops[i][j] = null;
+              }              
             }
           }
           this.keys["Space"] = false;
@@ -277,10 +410,13 @@ class App extends Application {
         });
         this.renderer.renderNodeArray(arr, this.camera);        
       }
-
+      if (this.scene.doors) {
+        this.renderer.renderNodeArray(this.scene.doors, this.camera);
+      }
       if (this.scene.players) {
         this.renderer.renderNodeArray(this.scene.players, this.camera);
       }
+
     }
   }
 

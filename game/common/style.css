@@ -133,14 +133,30 @@ a.back:hover {
   margin-bottom: 20px;
 }
 
+.shop {
+  position: absolute;
+  text-align: center;
+  left: calc(50vw - 400px);
+}
+
 .hotbar_img {
   position: absolute;
-  left: calc(50vw - 480px);
+  left: calc(50vw - 430px);
   top: -100px;
 }
 
 .selector {
   position: absolute;
-  left: calc(50vw - 482px + calc(0 * 92px));
+  left: calc(50vw - 432px + calc(0 * 92px));
   top: -102px;
+}
+
+.shop_icon {
+  width: 120px;
+  height: 120px;
+}
+.shop_icon:hover {
+  position: absolute;
+  width: 124px;
+  height: 124px;
 }

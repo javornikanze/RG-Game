@@ -11,10 +11,11 @@ export class Crop extends Node {
     this.spawn_time = Date.now();
     this.state = 0;
     this.updateMatrix();
+    this.random_update_time = Math.random() * 5000 + 20000;
   }
 
   update() {
-    if(Date.now() - this.spawn_time > 1000 && this.state <= 2) {
+    if(Date.now() - this.spawn_time > this.random_update_time && this.state <= 2) {
         this.spawn_time = Date.now();        
         this.mesh = this.models[this.state].mesh;
         this.scale = this.models[this.state].scale;
