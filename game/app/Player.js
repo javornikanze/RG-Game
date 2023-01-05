@@ -65,7 +65,7 @@ export class Player extends Node {
 
     //console.log(c.velocity);
     
-    this.rotateToY(-Math.atan2(c.velocity[2], c.velocity[0]));
+    this.rotateToY(-Math.atan2(c.velocity[2], c.velocity[0]) + Math.PI/2);
 
     this.updateMatrix();
   }  

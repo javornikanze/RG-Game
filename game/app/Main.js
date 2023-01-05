@@ -69,7 +69,7 @@ class App extends Application {
       throw new Error("Camera node does not contain a camera reference");
     }
     
-    this.player_model = await this.loader.loadNode("eggplant2");
+    this.player_model = await this.loader.loadNode("Player");
     this.grass_tile_model = await this.loader.loadNode("tile0");
     this.farm_tile_model = await this.loader.loadNode("tile1");
     this.seed_model = await this.loader.loadNode("seeds");
