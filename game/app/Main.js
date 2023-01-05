@@ -24,11 +24,23 @@ class App extends Application {
     this.scene = await this.loader.loadScene(this.loader.defaultScene);
     this.camera = await this.loader.loadNode("Camera");
 
-    this.hotbar_selector = document.getElementsByClassName("selector");
+    this.hotbar_selector = document.getElementsByClassName("selector");    
+    this.hotbar = [["hoe", 1], ["carrot", 5], ["eggplant", 5], ["salad", 1], ["pumpkin", 2], ["wheat", 3], ["beetroot", 4]];
+    this.hotbar_index = 0;
+
+    this.carrot_icon = document.getElementById("carrot_icon");
+    this.pumpkin_icon = document.getElementById("pumpkin_icon");
+    this.wheat_icon = document.getElementById("wheat_icon");
+    this.eggplant_icon = document.getElementById("eggplant_icon");
+    this.beetroot_icon = document.getElementById("beetroot_icon");
+    this.salad_icon = document.getElementById("salad_icon");
+
+    this.hoe_icon = document.getElementById("hoe_icon");
     
     this.scene.players = [];
     this.scene.tiles = [];
     this.scene.crops = [];
+    
     
     if (!this.scene || !this.camera) {
       throw new Error("Scene or Camera not present in glTF");
@@ -126,9 +138,51 @@ class App extends Application {
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
     if (this.scene) {
+      if (this.hotbar) {
+        this.carrot_icon.style.display = "none";
+        this.salad_icon.style.display = "none";
+        this.eggplant_icon.style.display = "none";
+        this.wheat_icon.style.display = "none";
+        this.beetroot_icon.style.display = "none";
+        this.pumpkin_icon.style.display = "none";
+        this.hoe_icon.style.display = "none"
+        for(let i = 0; i < this.hotbar.length; i++) {
+          //console.log(this.hotbar[i][0]);
+          if(this.hotbar[i][0] == "hoe") {
+            this.hoe_icon.style.display = "initial";
+            this.hoe_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "carrot") {
+            this.carrot_icon.style.display = "initial";
+            this.carrot_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "salad") {
+            this.salad_icon.style.display = "initial";
+            this.salad_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "eggplant") {
+            this.eggplant_icon.style.display = "initial";
+            this.eggplant_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "wheat") {
+            this.wheat_icon.style.display = "initial";
+            this.wheat_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "beetroot") {
+            this.beetroot_icon.style.display = "initial";
+            this.beetroot_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+          if(this.hotbar[i][0] == "pumpkin") {
+            this.pumpkin_icon.style.display = "initial";
+            this.pumpkin_icon.style.left = " calc(50vw - 482px + calc("+ i +" * 92px)";
+          }
+        } 
+      }
+
       if (this.hotbar_selector) {
         for(let i = 1; i < 10; i++) {
           if(this.keys["Digit" + i]) {
+            this.hotbar_index = i - 1;
             this.hotbar_selector[0].style.left = " calc(50vw - 482px + calc("+ (i - 1) +" * 92px)";
           }
         }        
@@ -155,32 +209,46 @@ class App extends Application {
         this.physics.updateMatrix();
       }   
       
-      if (this.keys["Space"]) {
-        //console.log(parseInt(this.scene.players[0].translation[0]), parseInt(this.scene.players[0].translation[2]));
-        let i = Math.round(this.scene.players[0].translation[0] / 2);
-        let j = Math.round(this.scene.players[0].translation[2] / 2);
+      let i = Math.round(this.scene.players[0].translation[0] / 2);
+      let j = Math.round(this.scene.players[0].translation[2] / 2);
+
+      if(i == 0 && j == 0) {
+        console.log("shop");
+      }
+      
+      if (this.keys["Space"]) {        
         if(0 <= i && i < this.n_of_tiles && 0 <= j && j < this.n_of_tiles) {
           console.log(i, j);
           if(this.scene.tiles[i][j].type == "grass") {
             let t = 0;
-            this.scene.tiles[i][j] = new Tile(
-              t,
-              this.farm_tile_model,
-              Object.create([i * 2, 1.45, j * 2]),
-              "farm"
-            );
+            let type = 0;
+            if(this.hotbar[this.hotbar_index]) {
+              type = this.hotbar[this.hotbar_index][0];
+            }
+            if(type == "hoe") {
+              this.scene.tiles[i][j] = new Tile(
+                t,
+                this.farm_tile_model,
+                Object.create([i * 2, 1.45, j * 2]),
+                "farm"
+              );
+            }
           }
           else if(this.scene.tiles[i][j].type == "farm") {
-            let random_type = Object.keys(this.crops_models)[Math.round(Math.random() * (Object.keys(this.crops_models).length - 1))];
-            console.log(random_type);
-            let t = 0;
-            this.scene.crops[i][j] = new Crop(
-              t,
-              this.seed_model,
-              Object.create([i * 2, 1.6, j * 2]),
-              random_type,
-              this.crops_models[random_type]
-            );
+            let type = 0;
+            if(this.hotbar[this.hotbar_index]) {
+              type = this.hotbar[this.hotbar_index][0];
+            }
+            if(Object.keys(this.crops_models).includes(type)) {
+              let t = 0;
+              this.scene.crops[i][j] = new Crop(
+                t,
+                this.seed_model,
+                Object.create([i * 2, 1.6, j * 2]),
+                type,
+                this.crops_models[type]
+              );
+            }
           }
           this.keys["Space"] = false;
         }
