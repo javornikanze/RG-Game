@@ -124,3 +124,23 @@ a.back:hover {
 #button:hover {
   background-color: rgb(79, 63, 80);
 }
+
+.hotbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.hotbar_img {
+  position: absolute;
+  left: calc(50vw - 480px);
+  top: -100px;
+}
+
+.selector {
+  position: absolute;
+  left: calc(50vw - 482px + calc(0 * 92px));
+  top: -102px;
+}

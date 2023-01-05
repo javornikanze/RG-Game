@@ -24,6 +24,7 @@ class App extends Application {
     this.scene = await this.loader.loadScene(this.loader.defaultScene);
     this.camera = await this.loader.loadNode("Camera");
 
+    this.hotbar_selector = document.getElementsByClassName("selector");
     
     this.scene.players = [];
     this.scene.tiles = [];
@@ -125,6 +126,14 @@ class App extends Application {
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
     if (this.scene) {
+      if (this.hotbar_selector) {
+        for(let i = 1; i < 10; i++) {
+          if(this.keys["Digit" + i]) {
+            this.hotbar_selector[0].style.left = " calc(50vw - 482px + calc("+ (i - 1) +" * 92px)";
+          }
+        }        
+      }
+
       if (this.camera) {
         this.camera.update(dt);
       }
@@ -205,8 +214,8 @@ class App extends Application {
         this.renderer.renderNodeArray(this.scene.players, this.camera);
       }
     }
-
   }
+
 
   resize() {
     const w = this.canvas.clientWidth;
@@ -230,7 +239,6 @@ class App extends Application {
 }
 window.onload = function () {
   const canvas = document.querySelector("canvas");
-
   const app = new App(canvas);
   //const gui = new GUI();
   //gui.add(app, "enableCamera");
