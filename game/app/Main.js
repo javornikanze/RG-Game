@@ -69,7 +69,7 @@ class App extends Application {
       throw new Error("Camera node does not contain a camera reference");
     }
     
-    this.player_model = await this.loader.loadNode("Player");
+    this.player_model = await this.loader.loadNode("Player0");
     this.grass_tile_model = await this.loader.loadNode("tile0");
     this.farm_tile_model = await this.loader.loadNode("tile1");
     this.seed_model = await this.loader.loadNode("seeds");
@@ -83,6 +83,10 @@ class App extends Application {
       beetroot: [await this.loader.loadNode("beetroot0"), await this.loader.loadNode("beetroot1"), await this.loader.loadNode("beetroot2")]
     };
     
+    this.player_models = [];
+    for(let i = 0; i < 8; i++) {
+      this.player_models.push(await this.loader.loadNode("Player" + i));
+    }
 
     this.renderer = new Renderer(this.gl);
     this.renderer.prepareScene(this.scene);
@@ -150,7 +154,8 @@ class App extends Application {
     const t = Object.create(this.player_model.translation);
     let p = new Player(
       t,
-      this.player_model
+      this.player_model,
+      this.player_models
     );
     this.scene.players.push(p);
   }

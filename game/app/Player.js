@@ -2,17 +2,19 @@ import { Node } from "./Node.js";
 import { vec3, quat } from "../lib/gl-matrix-module.js";
 
 export class Player extends Node {
-  constructor(options, enemies) {
+  constructor(options, model, models) {
     super(options);
-    this.scale = enemies.scale;
-    this.mesh = enemies.mesh;
+    this.scale = model.scale;
+    this.mesh = model.mesh;
+    this.models = models;
     this.translation = Object.create([11, 2, 7]);
     this.keydownHandler = this.keydownHandler.bind(this);
     this.keyupHandler = this.keyupHandler.bind(this);
     this.keys = {};
     document.addEventListener("keydown", this.keydownHandler);
     document.addEventListener("keyup", this.keyupHandler);
-
+    this.startTime = Date.now();
+    this.animationIndex = 0; 
     this.updateMatrix();
   }
 
@@ -66,6 +68,19 @@ export class Player extends Node {
     //console.log(c.velocity);
     
     this.rotateToY(-Math.atan2(c.velocity[2], c.velocity[0]) + Math.PI/2);
+
+    if(vec3.len(c.velocity) > 0.5 && this.startTime + 85 < Date.now()) {
+      this.startTime = Date.now();
+      console.log(this.mesh);
+      this.mesh = this.models[this.animationIndex].mesh;
+      this.scale = this.models[this.animationIndex].scale;
+      console.log(this.models);
+      console.log(this.animationIndex);
+      this.animationIndex += 1;
+      if(this.animationIndex == 8) {
+        this.animationIndex = 0;
+      }
+    };
 
     this.updateMatrix();
   }  
