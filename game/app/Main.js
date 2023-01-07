@@ -113,7 +113,8 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_tiles = 11;
+    this.n_of_rows = 5;
+    this.n_of_columns = 11;
     this.addTiles();
     this.addFences();
     this.addDoor();  
@@ -159,10 +160,10 @@ class App extends Application {
 
   addTiles() {    
    const t = 0;
-   for(let i = 0; i < this.n_of_tiles; i++) {
+   for(let i = 0; i < this.n_of_columns; i++) {
     let arr = new Array();
     let crop_arr = new Array();
-    for(let j = 0; j < this.n_of_tiles; j++) {      
+    for(let j = 0; j < this.n_of_rows; j++) {      
       let p = new Tile(
         t,
         this.grass_tile_model,
@@ -177,35 +178,41 @@ class App extends Application {
    }   
   }
 
-  addTileLine() {    
+  addTileRow() {    
     const t = 0;
-    let arr = new Array();
-    let crop_arr = new Array();
-    for(let i = 0; i < this.n_of_tiles - 1; i++) {
+    
+    for(let i = 0; i < this.n_of_columns; i++) {
       this.scene.crops[i].push(null);
       this.scene.tiles[i].push(new Tile(
         t,
         this.grass_tile_model,
-        Object.create([i * 2, 1.45, (this.n_of_tiles - 1) * 2]),
+        Object.create([i * 2, 1.45, (this.n_of_rows- 1) * 2]),
         "grass"
       ));  
     }
-    for(let i = 0; i < this.n_of_tiles; i++) {
-      arr.push(new Tile(
-        t,
-        this.grass_tile_model,
-        Object.create([(this.n_of_tiles - 1) * 2, 1.45, i * 2]),
-        "grass"
-      ));
-      crop_arr.push(null);      
-     }
-     this.scene.tiles.push(arr);
-     this.scene.crops.push(crop_arr);
+  
     }   
+
+    addTileLine() {
+      const t = 0;
+      let arr = new Array();
+      let crop_arr = new Array();
+      for(let i = 0; i < this.n_of_rows; i++) {
+       arr.push(new Tile(
+         t,
+         this.grass_tile_model,
+         Object.create([(this.n_of_columns - 1) * 2, 1.45, i * 2]),
+         "grass"
+       ));
+       crop_arr.push(null);      
+      }        
+      this.scene.tiles.push(arr);
+      this.scene.crops.push(crop_arr);
+    }
 
   addFences() {    
     const t = 0;
-    for(let i = 0; i < this.n_of_tiles; i++) {     
+    for(let i = 0; i < this.n_of_rows; i++) {     
        let p = new Tile(
          t,
          this.fence_model2,
@@ -218,13 +225,13 @@ class App extends Application {
        p = new Tile(
         t,
         this.fence_model2,
-        Object.create([this.n_of_tiles * 2 - 0.85, 1.45, i * 2]),
+        Object.create([this.n_of_columns * 2 - 0.85, 1.45, i * 2]),
         "fence",
         [0, 0, 0, 0]
       ); 
       this.scene.fences.push(p); 
-
-      p = new Tile(
+    for(let i = 0; i < this.n_of_columns; i++) {  
+      let p = new Tile(
         t,
         this.fence_model,
         Object.create([i * 2, 1.45, -1.2]),
@@ -236,11 +243,12 @@ class App extends Application {
       p = new Tile(
         t,
         this.fence_model,
-        Object.create([i * 2, 1.45, this.n_of_tiles * 2 - 0.85]),
+        Object.create([i * 2, 1.45, this.n_of_rows * 2 - 0.85]),
         "fence",
         [0, 0, 0, 0]
       ); 
-      this.scene.fences.push(p);              
+      this.scene.fences.push(p); 
+      }             
     }     
   }   
    
@@ -427,12 +435,22 @@ class App extends Application {
       }
       
       if (this.keys["KeyK"]) {
-        this.n_of_tiles += 1;
-        this.addTileLine();
-        this.scene.fences = [];
+        this.n_of_rows += 1;
+        this.addTileRow();
+        this.scene.fences = [];        
         this.addFences();
         this.keys["KeyK"] = false;
       }
+
+      
+      if (this.keys["KeyL"]) {
+        this.n_of_columns += 1;
+        this.addTileLine();
+        this.scene.fences = [];        
+        this.addFences();
+        this.keys["KeyL"] = false;
+      }
+      
 
       if (this.keys["Space"]) {
         if(0 <= i && i < this.n_of_tiles && 0 <= j && j < this.n_of_tiles) {
