@@ -28,6 +28,7 @@ class App extends Application {
     this.hotbar_selector = document.getElementsByClassName("selector");    
     this.hotbar = [["hoe", 1]];
     this.hotbar_index = 0;
+    this.money = 100;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");
@@ -42,14 +43,21 @@ class App extends Application {
     this.shop_wheat = document.getElementById("shop_wheat");
     this.shop_eggplant = document.getElementById("shop_eggplant");
     this.shop_beetroot = document.getElementById("shop_beetroot");
-    this.shop_salad = document.getElementById("shop_salad");   
+    this.shop_salad = document.getElementById("shop_salad");
+    this.shop_sell = document.getElementById("sell");
+    this.shop_money = document.getElementById("shop_money"); 
+    this.ui_money = document.getElementById("money");
+    this.ui_money.innerHTML = this.money;
+    this.shop = document.getElementById("shop");
 
-    this.shop_carrot.addEventListener('click', (e) => this.buyItem(e));
-    this.shop_pumpkin.addEventListener('click', (e) => this.buyItem(e));
-    this.shop_wheat.addEventListener('click', (e) => this.buyItem(e));
-    this.shop_eggplant.addEventListener('click', (e) => this.buyItem(e));
-    this.shop_beetroot.addEventListener('click', (e) => this.buyItem(e));
-    this.shop_salad.addEventListener('click', (e) => this.buyItem(e));
+    this.shop_carrot.addEventListener('click', (e) => this.buyItem(e, 25));
+    this.shop_pumpkin.addEventListener('click', (e) => this.buyItem(e, 50));
+    this.shop_wheat.addEventListener('click', (e) => this.buyItem(e, 10));
+    this.shop_eggplant.addEventListener('click', (e) => this.buyItem(e, 50));
+    this.shop_beetroot.addEventListener('click', (e) => this.buyItem(e, 25));
+    this.shop_salad.addEventListener('click', (e) => this.buyItem(e, 10));
+    this.shop_sell.addEventListener('click', (e) => this.sellItems(e));
+
 
     this.counters = [document.getElementById("c1"), document.getElementById("c2"), document.getElementById("c3"), document.getElementById("c4"), document.getElementById("c5"), document.getElementById("c6"), document.getElementById("c7"), document.getElementById("c8"), document.getElementById("c9")]
 
@@ -59,6 +67,7 @@ class App extends Application {
     this.scene.tiles = [];
     this.scene.crops = [];
     this.scene.doors = [];
+    this.scene.fences = [];
     
     
     if (!this.scene || !this.camera) {
@@ -74,6 +83,8 @@ class App extends Application {
     this.farm_tile_model = await this.loader.loadNode("tile1");
     this.seed_model = await this.loader.loadNode("seeds");
     this.door_model = await this.loader.loadNode("Barndoor");
+    this.fence_model = await this.loader.loadNode("fence");
+    this.fence_model2 = await this.loader.loadNode("fence1");
     this.crops_models = {
       pumpkin: [await this.loader.loadNode("pumpkin0"), await this.loader.loadNode("pumpkin1"), await this.loader.loadNode("pumpkin2")],
       salad: [await this.loader.loadNode("salad0"), await this.loader.loadNode("salad1"), await this.loader.loadNode("salad2")],
@@ -102,9 +113,10 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_tiles = 100;
+    this.n_of_tiles = 9;
     this.addTiles();
-    this.addDoor();    
+    this.addFences();
+    this.addDoor();  
     
     this.keydownHandler = this.keydownHandler.bind(this);
     this.keyupHandler = this.keyupHandler.bind(this);
@@ -113,21 +125,36 @@ class App extends Application {
     document.addEventListener("keyup", this.keyupHandler);
   }
 
-  buyItem(e) {
-    //console.log(e.target.getAttribute('value'));
+ 
+
+  buyItem(e, cost) {
     let type = e.target.getAttribute('value');
-    console.log(type);
     let found = false;
     for(let i = 0; i < this.hotbar.length; i++) {      
       if(this.hotbar[i][0] == type) {
-        this.hotbar[i][1] += 1;
-        found = true;
-        break;
+        if(this.money >= cost) {
+          this.hotbar[i][1] += 1;
+          found = true;
+          this.money -= cost;
+          this.ui_money.innerHTML = this.money;
+          break;
+        }
       }      
     }
     if(!found) {
-      this.hotbar.push([type, 1]);
+      if(this.money >= cost) {
+        this.hotbar.push([type, 1]);
+        this.money -= cost;
+        this.ui_money.innerHTML = this.money;
+
+      }
     }
+  }
+
+  sellItems() {    
+    this.money += parseInt(document.getElementById("shop_money").innerHTML);
+    this.hotbar = [["hoe", 1]];
+    document.getElementById("money").innerHTML = this.money;
   }
 
   addTiles() {    
@@ -149,6 +176,74 @@ class App extends Application {
     this.scene.crops.push(crop_arr);
    }   
   }
+
+  addTileLine() {    
+    const t = 0;
+    let arr = new Array();
+    let crop_arr = new Array();
+    for(let i = 0; i < this.n_of_tiles - 1; i++) {
+      this.scene.crops[i].push(null);
+      this.scene.tiles[i].push(new Tile(
+        t,
+        this.grass_tile_model,
+        Object.create([i * 2, 1.45, (this.n_of_tiles - 1) * 2]),
+        "grass"
+      ));  
+    }
+    for(let i = 0; i < this.n_of_tiles; i++) {
+      arr.push(new Tile(
+        t,
+        this.grass_tile_model,
+        Object.create([(this.n_of_tiles - 1) * 2, 1.45, i * 2]),
+        "grass"
+      ));
+      crop_arr.push(null);      
+     }
+     this.scene.tiles.push(arr);
+     this.scene.crops.push(crop_arr);
+    }   
+
+  addFences() {    
+    const t = 0;
+    for(let i = 0; i < this.n_of_tiles; i++) {     
+       let p = new Tile(
+         t,
+         this.fence_model2,
+         Object.create([-1.1, 1.45, i * 2]),
+         "fence",
+         [0, 0, 0, 0]
+       ); 
+       this.scene.fences.push(p); 
+
+       p = new Tile(
+        t,
+        this.fence_model2,
+        Object.create([this.n_of_tiles * 2 - 0.85, 1.45, i * 2]),
+        "fence",
+        [0, 0, 0, 0]
+      ); 
+      this.scene.fences.push(p); 
+
+      p = new Tile(
+        t,
+        this.fence_model,
+        Object.create([i * 2, 1.45, -1.2]),
+        "fence",
+        [0, 0, 0, 0]
+      ); 
+      this.scene.fences.push(p);  
+
+      p = new Tile(
+        t,
+        this.fence_model,
+        Object.create([i * 2, 1.45, this.n_of_tiles * 2 - 0.85]),
+        "fence",
+        [0, 0, 0, 0]
+      ); 
+      this.scene.fences.push(p);              
+    }     
+  }   
+   
 
   addPlayer() {
     const t = Object.create(this.player_model.translation);
@@ -198,13 +293,19 @@ class App extends Application {
       this.scene.doors[0].translation[0] -= 0.05;
     }
     else {
-      this.shop_bg.style.display = "initial";
-      this.shop_carrot.style.display = "initial";
-      this.shop_pumpkin.style.display = "initial";
-      this.shop_wheat.style.display = "initial"; 
-      this.shop_eggplant.style.display = "initial";
-      this.shop_beetroot.style.display = "initial";
-      this.shop_salad.style.display = "initial"; 
+      this.shop.style.display = "initial";
+      let money = 0;
+      for(let i = 1; i < this.hotbar.length; i++) {
+        switch(this.hotbar[i][0]) {
+          case "salad": money += 10 * this.hotbar[i][1]; break;
+          case "wheat": money += 10 * this.hotbar[i][1]; break;
+          case "beetroot": money += 25 * this.hotbar[i][1]; break;
+          case "carrot": money += 25 * this.hotbar[i][1]; break;
+          case "eggplant": money += 50 * this.hotbar[i][1]; break;
+          case "pumpkin": money += 50 * this.hotbar[i][1]; break;
+        }
+      }
+      this.shop_money.innerHTML = money; 
     }      
     if (this.scene.doors[1].translation[0] < 11) {
       this.scene.doors[1].translation[0] += 0.05;
@@ -214,13 +315,7 @@ class App extends Application {
   }
 
   closeDoors() {
-    this.shop_bg.style.display = "none";
-    this.shop_carrot.style.display = "none";
-    this.shop_pumpkin.style.display = "none";
-    this.shop_wheat.style.display = "none"; 
-    this.shop_eggplant.style.display = "none";
-    this.shop_beetroot.style.display = "none";
-    this.shop_salad.style.display = "none"; 
+    this.shop.style.display = "none";
 
     if (this.scene.doors[0].translation[0] < 6) {
       this.scene.doors[0].translation[0] += 0.05;
@@ -232,7 +327,8 @@ class App extends Application {
     this.scene.doors[1].updateMatrix();
   }
 
-  update() {
+  update() {   
+
     const t = (this.time = Date.now());
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
@@ -250,7 +346,6 @@ class App extends Application {
         }
 
         for(let i = 0; i < this.hotbar.length; i++) {
-          //console.log(this.hotbar[i][0]);
           if(this.hotbar[i][1] > 1){
             this.counters[i].innerHTML = this.hotbar[i][1];            
             this.counters[i].style.display = "initial";
@@ -297,15 +392,18 @@ class App extends Application {
             this.hotbar_selector[0].style.left = " calc(50vw - 432px + calc("+ (i - 1) +" * 92px)";
           }
         }        
-      }      
+      }     
 
-      if (this.camera) {
-        this.camera.update(dt);
+      for (const player of this.scene.players) {       
+        player.update(dt, t, this.n_of_tiles);
+        if (this.camera && !player.stop) {
+          this.camera.update(dt);
+        }
+        //console.log(player.translation[0] - this.camera.translation[0], player.translation[1] -this.camera.translation[1], player.translation[2]-this.camera.translation[2]);   
       }
+      
 
-      for (const player of this.scene.players) {
-        player.update(dt, t);
-      }
+         
       
       for (const crop_row of this.scene.crops) {
         for (const crop of crop_row) {
@@ -313,8 +411,6 @@ class App extends Application {
             crop.update();
         }
       }
-
-      //console.log(this.scene.enemies);
 
       if (this.physics) {
         this.physics.updateMatrix();
@@ -330,9 +426,16 @@ class App extends Application {
         this.closeDoors();
       }
       
-      if (this.keys["Space"]) {        
+      if (this.keys["KeyK"]) {
+        this.n_of_tiles += 1;
+        this.addTileLine();
+        this.scene.fences = [];
+        this.addFences();
+        this.keys["KeyK"] = false;
+      }
+
+      if (this.keys["Space"]) {
         if(0 <= i && i < this.n_of_tiles && 0 <= j && j < this.n_of_tiles) {
-          console.log(i, j);
           if(this.scene.tiles[i][j].type == "grass") {
             let t = 0;
             let type = 0;
@@ -372,7 +475,6 @@ class App extends Application {
             else {             
               if(this.hotbar_index == 0 && this.scene.crops[i][j].state == 3) {                
                 let found = false;
-                console.log(this.scene.crops[i][j].type);
                 let type = this.scene.crops[i][j].type;
                 for(let i = 0; i < this.hotbar.length; i++) {    
                   if(this.hotbar[i][0] == type) {
@@ -417,6 +519,9 @@ class App extends Application {
       }
       if (this.scene.doors) {
         this.renderer.renderNodeArray(this.scene.doors, this.camera);
+      }
+      if (this.scene.fences) {
+        this.renderer.renderNodeArray(this.scene.fences, this.camera);
       }
       if (this.scene.players) {
         this.renderer.renderNodeArray(this.scene.players, this.camera);

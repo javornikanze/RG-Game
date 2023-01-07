@@ -67,9 +67,7 @@
       <button id="button2" onclick="location.reload(true)">TRY AGAIN</button>
     </div>
     <div class="overlay" id="overlay">
-      <div>HEALTH: <span id="health"></span></div>
-      <div>MONEY: <span id="money"></span></div>
-      <div>WAVE: <span id="wave"></span></div>
+      <div><img src="./common/images/coin.png"> <span id="money" class="ui_money">0</span></div>
       <div class="hotbar">
         <img class = "hotbar_img" src="./common/images/hotbar.png">
         <img class = "selector" src="./common/images/selector.png">
@@ -93,15 +91,16 @@
         <div class = "selector" id="c9" style="margin-left:749px; margin-top: 62px">9</div>
 
       </div>
-      <div class="shop">
+      <div class="shop" id="shop">
         <img id="shop_bg" src="./common/images/shop_bg.png">
-        <img class="shop_icon" id="shop_eggplant" style="left: 200px; top: 20px; position: absolute;" src="./common/images/eggplant_icon.png" value="eggplant">
-        <img class="shop_icon" id="shop_salad" style="left: 350px; top: 20px; position: absolute;" src="./common/images/salad_icon.png" value="salad">
-        <img class="shop_icon" id="shop_beetroot" style="left: 500px; top: 20px; position: absolute;" src="./common/images/beetroot_icon.png" value="beetroot">
-        <img class="shop_icon" id="shop_carrot" style="left: 200px; top: 200px; position: absolute;" src="./common/images/carrot_icon.png" value="carrot">
-        <img class="shop_icon" id="shop_wheat" style="left: 350px; top: 200px; position: absolute;" src="./common/images/wheat_icon.png" value="wheat">
-        <img class="shop_icon" id="shop_pumpkin" style="left: 500px; top: 200px; position: absolute;" src="./common/images/pumpkin_icon.png" value="pumpkin">
-
+        <img class="shop_icon" id="shop_eggplant" style="left: 500px; top: 127px; position: absolute;" src="./common/images/eggplant_icon.png" value="eggplant">
+        <img class="shop_icon" id="shop_salad" style="left: 200px; top: 127px; position: absolute;" src="./common/images/salad_icon.png" value="salad">
+        <img class="shop_icon" id="shop_beetroot" style="left: 350px; top: 127px; position: absolute;" src="./common/images/beetroot_icon.png" value="beetroot">
+        <img class="shop_icon" id="shop_carrot" style="left: 350px; top: 300px; position: absolute;" src="./common/images/carrot_icon.png" value="carrot">
+        <img class="shop_icon" id="shop_wheat" style="left: 200px; top: 300px; position: absolute;" src="./common/images/wheat_icon.png" value="wheat">
+        <img class="shop_icon" id="shop_pumpkin" style="left: 500px; top: 300px; position: absolute;" src="./common/images/pumpkin_icon.png" value="pumpkin">
+        <img class="sell_button" id="sell" style="left: 25px; top: 490px; position: absolute;" src="./common/images/sell.png">
+        <div class="money" id="shop_money" style="left: 320px; top: 519px; position: absolute;">0</div>
       </div>
 
     </div>

@@ -16,6 +16,7 @@ export class Player extends Node {
     this.startTime = Date.now();
     this.animationIndex = 0; 
     this.updateMatrix();
+    this.stop = false;
   }
 
   rotateToY(angle) {
@@ -28,7 +29,8 @@ export class Player extends Node {
     this.updateMatrix();
   }
 
-  update(dt) {   
+  update(dt, t, n) { 
+    console.log(n);  
     
     const c = this;
     const right = vec3.set(vec3.create(), 1, 0, -1);
@@ -63,7 +65,16 @@ export class Player extends Node {
       vec3.scale(c.velocity, c.velocity, c.maxSpeed / len);
     }
 
-    vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);
+    let vel = c.velocity;
+    vec3.scaleAndAdd(c.translation, c.translation, vel, dt);
+    if(c.translation[0] < 0 || c.translation[2] < 0 || c.translation[0] > n * 2 - 1.3 || c.translation[2] > n * 2 - 1.3) {
+      let v = [-vel[0], -vel[1], -vel[2]]
+      vec3.scaleAndAdd(c.translation, c.translation, v, dt);
+      this.stop = true;
+    }
+    else {
+      this.stop = false;
+    }
 
     //console.log(c.velocity);
     
@@ -71,11 +82,11 @@ export class Player extends Node {
 
     if(vec3.len(c.velocity) > 0.5 && this.startTime + 85 < Date.now()) {
       this.startTime = Date.now();
-      console.log(this.mesh);
+      //console.log(this.mesh);
       this.mesh = this.models[this.animationIndex].mesh;
       this.scale = this.models[this.animationIndex].scale;
-      console.log(this.models);
-      console.log(this.animationIndex);
+      //console.log(this.models);
+      //console.log(this.animationIndex);
       this.animationIndex += 1;
       if(this.animationIndex == 8) {
         this.animationIndex = 0;

@@ -1,12 +1,10 @@
 import { mat4, vec3 } from "../lib/gl-matrix-module.js";
-import { Utils } from "./Utils.js";
 import { Node } from "./Node.js";
 
 export class Camera extends Node {
   constructor(options = {}) {
     super(options);
-    this.projection = mat4.create();
-    Utils.init(this, this.constructor.defaults, options);
+    this.projection = mat4.create();    
     this.updateProjection();
     //this.mousemoveHandler = this.mousemoveHandler.bind(this);
     this.keydownHandler = this.keydownHandler.bind(this);
@@ -54,8 +52,8 @@ export class Camera extends Node {
       vec3.scale(c.velocity, c.velocity, c.maxSpeed / len);
     }
 
-    vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);
-
+    vec3.scaleAndAdd(c.translation, c.translation, c.velocity, dt);      
+    
     this.updateMatrix();
   }
 
