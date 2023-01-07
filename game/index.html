@@ -15,44 +15,36 @@
       <canvas id="canvas"></canvas>
     </div>
     <div class="startup" id="startup">
-      <span>WELCOME TO COVID-19 DEFENDER</span><br /><br />
-      <span
-        >Evropski svet se je odločil, da nam bo za boj proti korona virusu
-        podaril 100€ in nas za vsak uspešen uboj nagradil z 1€.</span
-      ><br /><br />
-      <span
-        >Ker virus rad mutira se rabite spopasti proti tremi različicami:</span
-      ><br /><br />
-      <span style="float: left">
-        <img src="./common/images/virus1.png" style="float: left" />
-        Prva različica virusa, najlažje obvladljiva in najbolj pogosta.<br
-      /></span>
-      <span style="float: left">
-        <img src="./common/images/virus2.png" style="float: left" />
-        Druga različica virusa, težje obvladljiva in malo manj pogosta.<br
-      /></span>
-      <span style="float: left">
-        <img src="./common/images/virus3.png" style="float: left" />
-        Tretja različica virusa, nova različica, zelo težko obvladljiva.<br /></span
-      ><br />
-      <span
-        >Na voljo imate tri različne turrete, prvi stane 25€, prva nadgradnja
-        stane 40€, za zadnjo nadgradnjo pa boste odšteli 60€</span
-      ><br /><br /><br />
-      <span
-        >Za dodajanje turretov, si izberete eno izmed mnogih lokacij, ki so na
-        voljo na mapi in jo vnesete v okno mapSelection in kliknite gumb
-        dodaj_Nadgradi</span
-      ><br /><br /><br />
-      <span
-        >Za nadgrajevanje turretov ponovno kliknite gumb dodaj_nadgradi, za
-        odstranjevanje pa je na voljo gumb odstrani_Turret. </span
-      ><br /><br /><br />
-      <span>Da zančnete nov val kliknite gumb begin </span
-      ><br /><br /><br /><br />
+      <span>WELCOME TO GREENFIELD</span>
+      <br /><br />
+      <span>In this game you can create farm land, plant and sell crops to earn money and expand your land. To create farm land, you will have to use your hoe.</span>
+      <br />
+      <span style="vertical-align: middle;">
+      <img src="./common/images/grass_tile.png">
+      <img src="./common/images/hoe_icon.png">
+      <img src="./common/images/farm_tile.png">
+      </span>
+      <br /><br />
+
+      <span>After you create some farmland, you can purchase and plant 6 types of crops at different prices:</span>
+      <br /><br />
+      <img src="./common/images/carrot_icon.png">
+      <img src="./common/images/eggplant_icon.png">
+      <img src="./common/images/salad_icon.png">
+      <br /><br />
+      <img src="./common/images/beetroot_icon.png">
+      <img src="./common/images/pumpkin_icon.png">        
+      <img src="./common/images/wheat_icon.png">
+      <br /><br />
+
+      <span>When the crops are fully grown, you can collect them with a hoe and then resell them at the Farmers market. 
+        You can use the money to buy and plant more crops or to expand your land.</span>
+
+      <br /><br />
+      <br /><br />
       <button
         id="button"
-        onclick="getElementById('game').style.filter = 'none'; getElementById('overlay').style.display = 'block'; getElementById('startup').style.display = 'none'; "
+        onclick="getElementById('game').style.filter = 'none'; getElementById('overlay').style.display = 'block'; getElementById('startup').style.display = 'none'; start();"
       >
         START GAME
       </button>
@@ -73,6 +65,7 @@
         <img class = "selector" src="./common/images/selector.png">
 
         <img class = "selector" id="hoe_icon" src="./common/images/hoe_icon.png">
+        <img class = "selector" id="watering_can_icon" src="./common/images/watering_can_icon.png">
         <img class = "selector" id="carrot_icon" src="./common/images/carrot_icon.png">
         <img class = "selector" id="eggplant_icon" src="./common/images/eggplant_icon.png">
         <img class = "selector" id="salad_icon" src="./common/images/salad_icon.png">

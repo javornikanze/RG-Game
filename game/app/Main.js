@@ -8,6 +8,7 @@ import { Player } from "./Player.js";
 import { Tile } from "./Tile.js";
 import { Crop } from "./Crop.js";
 import { Door } from "./Door.js";
+import { WaterParticle } from "./WaterParticle.js";
 
 class App extends Application {
   constructor(canvas, glOptions) {
@@ -26,9 +27,9 @@ class App extends Application {
     this.camera = await this.loader.loadNode("Camera");
 
     this.hotbar_selector = document.getElementsByClassName("selector");    
-    this.hotbar = [["hoe", 1]];
+    this.hotbar = [["hoe", 1], ["watering_can", 1]];
     this.hotbar_index = 0;
-    this.money = 100;
+    this.money = 5000;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");
@@ -37,6 +38,7 @@ class App extends Application {
     this.beetroot_icon = document.getElementById("beetroot_icon");
     this.salad_icon = document.getElementById("salad_icon");
     this.hoe_icon = document.getElementById("hoe_icon");
+    this.watering_can_icon = document.getElementById("watering_can_icon");
 
     this.shop_carrot = document.getElementById("shop_carrot");
     this.shop_pumpkin = document.getElementById("shop_pumpkin");
@@ -51,6 +53,8 @@ class App extends Application {
     this.expand_down = document.getElementById("expand_down"); 
     this.expand_left = document.getElementById("expand_left");
     this.ui_money = document.getElementById("money");
+    this.startup = document.getElementById("startup");
+    this.button = document.getElementById("button");
 
     this.ui_money.innerHTML = this.money;
     this.shop = document.getElementById("shop");
@@ -75,7 +79,7 @@ class App extends Application {
     this.scene.crops = [];
     this.scene.doors = [];
     this.scene.fences = [];
-    
+    this.scene.water_particles = []
     
     if (!this.scene || !this.camera) {
       throw new Error("Scene or Camera not present in glTF");
@@ -85,6 +89,7 @@ class App extends Application {
       throw new Error("Camera node does not contain a camera reference");
     }
     
+    this.water_particle_model = await this.loader.loadNode("WaterParticle");
     this.player_model = await this.loader.loadNode("Player0");
     this.grass_tile_model = await this.loader.loadNode("tile0");
     this.farm_tile_model = await this.loader.loadNode("tile1");
@@ -120,7 +125,7 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_rows = 5;
+    this.n_of_rows = 7;
     this.n_of_columns = 11;
     this.addTiles();
     this.addFences();
@@ -161,7 +166,7 @@ class App extends Application {
 
   sellItems() {    
     this.money += parseInt(document.getElementById("shop_money").innerHTML);
-    this.hotbar = [["hoe", 1]];
+    this.hotbar = [["hoe", 1], ["watering_can", 1]];
     document.getElementById("money").innerHTML = this.money;
   }
 
@@ -347,8 +352,8 @@ class App extends Application {
         }
       }
       this.shop_money.innerHTML = money;
-      this.expand_left_cost.innerHTML = this.n_of_rows * 10;
-      this.expand_down_cost.innerHTML = this.n_of_columns * 10;
+      this.expand_left_cost.innerHTML = (this.n_of_rows - 6) * 500;
+      this.expand_down_cost.innerHTML = (this.n_of_columns - 10) * 500;
     }      
     if (this.scene.doors[1].translation[0] < 11) {
       this.scene.doors[1].translation[0] += 0.05;
@@ -384,6 +389,7 @@ class App extends Application {
         this.beetroot_icon.style.display = "none";
         this.pumpkin_icon.style.display = "none";
         this.hoe_icon.style.display = "none"
+        this.watering_can_icon.style.display = "none"
         for(let i = 0; i < 9; i++) {
           this.counters[i].style.display = "none";
         }
@@ -400,6 +406,10 @@ class App extends Application {
           if(this.hotbar[i][0] == "hoe") {
             this.hoe_icon.style.display = "initial";
             this.hoe_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";            
+          }
+          if(this.hotbar[i][0] == "watering_can") {
+            this.watering_can_icon.style.display = "initial";
+            this.watering_can_icon.style.left = " calc(50vw - 432px + calc("+ i +" * 92px)";            
           }
           if(this.hotbar[i][0] == "carrot") {
             this.carrot_icon.style.display = "initial";
@@ -438,13 +448,18 @@ class App extends Application {
       }     
 
       for (const player of this.scene.players) {       
-        player.update(dt, t, this.n_of_tiles);
+        player.update(dt, t, this.n_of_rows, this.n_of_columns);
         if (this.camera && !player.stop) {
           this.camera.update(dt);
         }
-        //console.log(player.translation[0] - this.camera.translation[0], player.translation[1] -this.camera.translation[1], player.translation[2]-this.camera.translation[2]);   
       }
       
+      for (let k = 0; k < this.scene.water_particles.length; k++) {
+        this.scene.water_particles[k].update(dt);       
+        if(this.scene.water_particles[k].delete_time < Date.now()) {
+          this.scene.water_particles.splice(k, 1);
+        }
+      }
 
          
       
@@ -462,21 +477,33 @@ class App extends Application {
       let i = Math.round(this.scene.players[0].translation[0] / 2);
       let j = Math.round(this.scene.players[0].translation[2] / 2);
 
-      if((i >= 3 && i <= 7) && (j == 0 || j == 1)) {
+      if((i >= 3 && i <= 5) && (j == 0 || j == 1)) {
         this.openDoors();
       }
       else {
         this.closeDoors();
-      }   
+      }  
+      
+      if((j >= 2 && j <= 3) && i == 0) {
+        this.startup.style.display = "initial";
+        this.startup.style.height = "500px";
+        this.button.style.display = "none";        
+      }
+      else {
+        //this.startup.style.display = "none";        
+        //document.getElementById('game').style.filter = 'none'; 
+        //document.getElementById('overlay').style.display = 'block';
+        //this.startup.style.display = "none";
+      }  
 
       if (this.keys["Space"]) {
-        if(0 <= i && i < this.n_of_tiles && 0 <= j && j < this.n_of_tiles) {
+        if(0 <= i && i < this.n_of_columns && 0 <= j && j < this.n_of_rows) {
           if(this.scene.tiles[i][j].type == "grass") {
             let t = 0;
             let type = 0;
             if(this.hotbar[this.hotbar_index]) {
               type = this.hotbar[this.hotbar_index][0];
-            }
+            }            
             if(type == "hoe") {
               this.scene.tiles[i][j] = new Tile(
                 t,
@@ -506,6 +533,14 @@ class App extends Application {
                   this.hotbar.splice(this.hotbar_index, 1);
                 }
               }
+              else if(type == "hoe") {
+                this.scene.tiles[i][j] = new Tile(
+                  t,
+                  this.grass_tile_model,
+                  Object.create([i * 2, 1.45, j * 2]),
+                  "grass"
+                );
+              }
             }
             else {             
               if(this.hotbar_index == 0 && this.scene.crops[i][j].state == 3) {                
@@ -525,7 +560,29 @@ class App extends Application {
               }              
             }
           }
-          this.keys["Space"] = false;
+          if(this.hotbar_index == 1) {
+            for(let n = -1; n < 2; n++) {
+              for(let m = -1; m < 2; m++) {
+                if(i + n >= 0 && i + n < this.n_of_columns && j + m >= 0 && j + m < this.n_of_rows) {  
+                  if(this.scene.crops[i+n][j+m] != null) {
+                    this.scene.crops[i+n][j+m].random_update_time = Math.random() * 10000 + 10000;
+                  }                 
+                  let r = 3 * Math.sqrt(Math.random())
+                  let theta = Math.random() * 2 * Math.PI
+
+                  this.scene.water_particles.push(new WaterParticle(
+                    t,
+                    this.water_particle_model,
+                    Object.create([this.scene.players[0].translation[0] + r * Math.cos(theta), 1.6, this.scene.players[0].translation[2] + r * Math.sin(theta)]),
+                  ));                  
+                }
+              }
+            }
+            console.log(i, j);
+          }
+          else {
+            this.keys["Space"] = false;
+          }
         }
       }
     }    
@@ -561,7 +618,9 @@ class App extends Application {
       if (this.scene.players) {
         this.renderer.renderNodeArray(this.scene.players, this.camera);
       }
-
+      if (this.scene.water_particles) {
+        this.renderer.renderNodeArray(this.scene.water_particles, this.camera);
+      }
     }
   }
 
@@ -593,5 +652,8 @@ window.onload = function () {
   //gui.add(app, "enableCamera");
 };
 
+function start() {
+  console.log("start");
+}
 
 

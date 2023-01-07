@@ -29,8 +29,7 @@ export class Player extends Node {
     this.updateMatrix();
   }
 
-  update(dt, t, n) { 
-    console.log(n);  
+  update(dt, t, n, m) {  
     
     const c = this;
     const right = vec3.set(vec3.create(), 1, 0, -1);
@@ -67,7 +66,7 @@ export class Player extends Node {
 
     let vel = c.velocity;
     vec3.scaleAndAdd(c.translation, c.translation, vel, dt);
-    if(c.translation[0] < 0 || c.translation[2] < 0 || c.translation[0] > n * 2 - 1.3 || c.translation[2] > n * 2 - 1.3) {
+    if(c.translation[0] < 0 || c.translation[2] < 0 || c.translation[0] > m * 2 - 1.3 || c.translation[2] > n * 2 - 1.3) {
       let v = [-vel[0], -vel[1], -vel[2]]
       vec3.scaleAndAdd(c.translation, c.translation, v, dt);
       this.stop = true;
@@ -76,22 +75,18 @@ export class Player extends Node {
       this.stop = false;
     }
 
-    //console.log(c.velocity);
     
     this.rotateToY(-Math.atan2(c.velocity[2], c.velocity[0]) + Math.PI/2);
 
-    if(vec3.len(c.velocity) > 0.5 && this.startTime + 85 < Date.now()) {
+    if(vec3.len(c.velocity) > 0.1 && this.startTime + 85 < Date.now()) {
       this.startTime = Date.now();
-      //console.log(this.mesh);
       this.mesh = this.models[this.animationIndex].mesh;
       this.scale = this.models[this.animationIndex].scale;
-      //console.log(this.models);
-      //console.log(this.animationIndex);
       this.animationIndex += 1;
       if(this.animationIndex == 8) {
         this.animationIndex = 0;
       }
-    };
+    }  
 
     this.updateMatrix();
   }  
