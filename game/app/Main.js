@@ -113,7 +113,7 @@ class App extends Application {
     );
 
     this.addPlayer();
-    this.n_of_tiles = 9;
+    this.n_of_tiles = 11;
     this.addTiles();
     this.addFences();
     this.addDoor();  
