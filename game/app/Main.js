@@ -20,6 +20,10 @@ class App extends Application {
     });
   }
   async start() {
+    this.tile_sound = new Audio("../common/sounds/tile_sound.mp3");
+    this.door_sound = new Audio("../common/sounds/door_sound.mp3");
+    this.rain_sound = new Audio("../common/sounds/rain.mp3");
+
     this.loader = new GLTFLoader();
     await this.loader.load("../common/models/textures/untitled.gltf");
 
@@ -58,7 +62,7 @@ class App extends Application {
 
     this.ui_money.innerHTML = this.money;
     this.shop = document.getElementById("shop");
-
+    
     this.shop_carrot.addEventListener('click', (e) => this.buyItem(e, 25));
     this.shop_pumpkin.addEventListener('click', (e) => this.buyItem(e, 50));
     this.shop_wheat.addEventListener('click', (e) => this.buyItem(e, 10));
@@ -69,6 +73,8 @@ class App extends Application {
     this.expand_down.addEventListener('click', (e) => this.expandDown(e));
     this.expand_left.addEventListener('click', (e) => this.expandLeft(e));
 
+    this.started_game = false;
+    this.button.addEventListener('click', (e) => this.afterStart(e));
 
     this.counters = [document.getElementById("c1"), document.getElementById("c2"), document.getElementById("c3"), document.getElementById("c4"), document.getElementById("c5"), document.getElementById("c6"), document.getElementById("c7"), document.getElementById("c8"), document.getElementById("c9")]
 
@@ -138,7 +144,12 @@ class App extends Application {
     document.addEventListener("keyup", this.keyupHandler);
   }
 
- 
+  afterStart () {
+    this.started_game = true; 
+    document.getElementById('game').style.filter = 'none'; 
+    document.getElementById('overlay').style.display = 'block'; 
+    document.getElementById('startup').style.display = 'none';
+  }
 
   buyItem(e, cost) {
     let type = e.target.getAttribute('value');
@@ -334,9 +345,10 @@ class App extends Application {
     }
   }
 
-  openDoors() {
+  openDoors() {    
     if (this.scene.doors[0].translation[0] > 5) {
-      this.scene.doors[0].translation[0] -= 0.05;
+      this.door_sound.play();
+      this.scene.doors[0].translation[0] -= 0.025;
     }
     else {
       this.shop.style.display = "initial";
@@ -356,7 +368,7 @@ class App extends Application {
       this.expand_down_cost.innerHTML = (this.n_of_columns - 10) * 500;
     }      
     if (this.scene.doors[1].translation[0] < 11) {
-      this.scene.doors[1].translation[0] += 0.05;
+      this.scene.doors[1].translation[0] += 0.025;
     }
     this.scene.doors[0].updateMatrix();
     this.scene.doors[1].updateMatrix();
@@ -376,7 +388,7 @@ class App extends Application {
   }
 
   update() {   
-
+    console.log(this.started_game);
     const t = (this.time = Date.now());
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
@@ -483,21 +495,20 @@ class App extends Application {
       else {
         this.closeDoors();
       }  
-      
-      if((j >= 2 && j <= 3) && i == 0) {
-        this.startup.style.display = "initial";
-        this.startup.style.height = "500px";
-        this.button.style.display = "none";        
-      }
-      else {
-        //this.startup.style.display = "none";        
-        //document.getElementById('game').style.filter = 'none'; 
-        //document.getElementById('overlay').style.display = 'block';
-        //this.startup.style.display = "none";
-      }  
 
-      if (this.keys["Space"]) {
-        if(0 <= i && i < this.n_of_columns && 0 <= j && j < this.n_of_rows) {
+      if((j >= 2 && j <= 3) && i == 0 ) {
+        this.startup.style.display = "initial"; 
+        this.startup.style.height = "500px"; 
+        this.button.style.display = "none";      
+      }      
+      else if(this.started_game){
+        this.startup.style.display = "none";  
+        this.button.style.display = "none";  
+      }
+
+      if (this.keys["Space"]) {        
+        if(0 <= i && i < this.n_of_columns && 0 <= j && j < this.n_of_rows) {         
+
           if(this.scene.tiles[i][j].type == "grass") {
             let t = 0;
             let type = 0;
@@ -560,6 +571,12 @@ class App extends Application {
               }              
             }
           }
+          if(this.hotbar_index == 0) {
+            this.tile_sound.pause();
+            this.tile_sound.currentTime = 0;
+            this.tile_sound.play();
+          }
+          
           if(this.hotbar_index == 1) {
             for(let n = -1; n < 2; n++) {
               for(let m = -1; m < 2; m++) {
@@ -574,7 +591,8 @@ class App extends Application {
                     t,
                     this.water_particle_model,
                     Object.create([this.scene.players[0].translation[0] + r * Math.cos(theta), 1.6, this.scene.players[0].translation[2] + r * Math.sin(theta)]),
-                  ));                  
+                  )); 
+                  this.rain_sound.play();                 
                 }
               }
             }
@@ -584,6 +602,9 @@ class App extends Application {
             this.keys["Space"] = false;
           }
         }
+      }
+      else {
+        this.rain_sound.pause();
       }
     }    
   }

@@ -16,7 +16,7 @@ export class Player extends Node {
     this.startTime = Date.now();
     this.animationIndex = 0; 
     this.updateMatrix();
-    this.stop = false;
+    this.stop = false;    
   }
 
   rotateToY(angle) {
