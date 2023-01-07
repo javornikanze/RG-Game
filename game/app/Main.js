@@ -297,12 +297,12 @@ class App extends Application {
       let money = 0;
       for(let i = 1; i < this.hotbar.length; i++) {
         switch(this.hotbar[i][0]) {
-          case "salad": money += 10 * this.hotbar[i][1]; break;
-          case "wheat": money += 10 * this.hotbar[i][1]; break;
-          case "beetroot": money += 25 * this.hotbar[i][1]; break;
-          case "carrot": money += 25 * this.hotbar[i][1]; break;
-          case "eggplant": money += 50 * this.hotbar[i][1]; break;
-          case "pumpkin": money += 50 * this.hotbar[i][1]; break;
+          case "salad": money += 6 * this.hotbar[i][1]; break;
+          case "wheat": money += 6 * this.hotbar[i][1]; break;
+          case "beetroot": money += 20 * this.hotbar[i][1]; break;
+          case "carrot": money += 20 * this.hotbar[i][1]; break;
+          case "eggplant": money += 45 * this.hotbar[i][1]; break;
+          case "pumpkin": money += 45 * this.hotbar[i][1]; break;
         }
       }
       this.shop_money.innerHTML = money; 
