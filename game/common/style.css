@@ -171,6 +171,16 @@ a.back:hover {
   height: 87px;
 }
 
+.expand_button {
+  width: 217px;
+  height: 54px;
+}
+.expand_button:hover {
+  position: absolute;
+  width: 218px;
+  height: 55px;
+}
+
 .money {
   position: absolute;
   font-size: 24px;

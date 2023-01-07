@@ -46,7 +46,12 @@ class App extends Application {
     this.shop_salad = document.getElementById("shop_salad");
     this.shop_sell = document.getElementById("sell");
     this.shop_money = document.getElementById("shop_money"); 
+    this.expand_down_cost = document.getElementById("expand_down_cost"); 
+    this.expand_left_cost = document.getElementById("expand_left_cost"); 
+    this.expand_down = document.getElementById("expand_down"); 
+    this.expand_left = document.getElementById("expand_left");
     this.ui_money = document.getElementById("money");
+
     this.ui_money.innerHTML = this.money;
     this.shop = document.getElementById("shop");
 
@@ -57,6 +62,8 @@ class App extends Application {
     this.shop_beetroot.addEventListener('click', (e) => this.buyItem(e, 25));
     this.shop_salad.addEventListener('click', (e) => this.buyItem(e, 10));
     this.shop_sell.addEventListener('click', (e) => this.sellItems(e));
+    this.expand_down.addEventListener('click', (e) => this.expandDown(e));
+    this.expand_left.addEventListener('click', (e) => this.expandLeft(e));
 
 
     this.counters = [document.getElementById("c1"), document.getElementById("c2"), document.getElementById("c3"), document.getElementById("c4"), document.getElementById("c5"), document.getElementById("c6"), document.getElementById("c7"), document.getElementById("c8"), document.getElementById("c9")]
@@ -158,6 +165,33 @@ class App extends Application {
     document.getElementById("money").innerHTML = this.money;
   }
 
+  expandLeft () {    
+    if(this.money >= parseInt(document.getElementById("expand_left_cost").innerHTML)) {
+      this.money -= parseInt(document.getElementById("expand_left_cost").innerHTML);
+      this.n_of_rows += 1;
+      this.addTileRow();
+      this.scene.fences = [];        
+      this.addFences();
+      this.ui_money.innerHTML = this.money;
+    }
+  }
+
+  
+  expandDown() {
+    if(this.money >= parseInt(document.getElementById("expand_down_cost").innerHTML)) {
+      this.money -= parseInt(document.getElementById("expand_down_cost").innerHTML);
+      this.n_of_columns += 1;
+      this.addTileLine();
+      this.scene.fences = [];        
+      this.addFences();
+      this.ui_money.innerHTML = this.money;
+    }
+  }
+
+
+
+  
+
   addTiles() {    
    const t = 0;
    for(let i = 0; i < this.n_of_columns; i++) {
@@ -179,8 +213,7 @@ class App extends Application {
   }
 
   addTileRow() {    
-    const t = 0;
-    
+    const t = 0;    
     for(let i = 0; i < this.n_of_columns; i++) {
       this.scene.crops[i].push(null);
       this.scene.tiles[i].push(new Tile(
@@ -313,7 +346,9 @@ class App extends Application {
           case "pumpkin": money += 45 * this.hotbar[i][1]; break;
         }
       }
-      this.shop_money.innerHTML = money; 
+      this.shop_money.innerHTML = money;
+      this.expand_left_cost.innerHTML = this.n_of_rows * 10;
+      this.expand_down_cost.innerHTML = this.n_of_columns * 10;
     }      
     if (this.scene.doors[1].translation[0] < 11) {
       this.scene.doors[1].translation[0] += 0.05;
@@ -432,25 +467,7 @@ class App extends Application {
       }
       else {
         this.closeDoors();
-      }
-      
-      if (this.keys["KeyK"]) {
-        this.n_of_rows += 1;
-        this.addTileRow();
-        this.scene.fences = [];        
-        this.addFences();
-        this.keys["KeyK"] = false;
-      }
-
-      
-      if (this.keys["KeyL"]) {
-        this.n_of_columns += 1;
-        this.addTileLine();
-        this.scene.fences = [];        
-        this.addFences();
-        this.keys["KeyL"] = false;
-      }
-      
+      }   
 
       if (this.keys["Space"]) {
         if(0 <= i && i < this.n_of_tiles && 0 <= j && j < this.n_of_tiles) {
