@@ -7,7 +7,7 @@ export class Player extends Node {
     this.scale = model.scale;
     this.mesh = model.mesh;
     this.models = models;
-    this.translation = Object.create([11, 2, 7]);
+    this.translation = Object.create([11, 1.5, 7]);
     this.keydownHandler = this.keydownHandler.bind(this);
     this.keyupHandler = this.keyupHandler.bind(this);
     this.keys = {};
