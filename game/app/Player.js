@@ -16,7 +16,8 @@ export class Player extends Node {
     this.startTime = Date.now();
     this.animationIndex = 0; 
     this.updateMatrix();
-    this.stop = false;    
+    this.stop = false;   
+    this.walking_sound = new Audio("../common/sounds/walking.mp3"); 
   }
 
   rotateToY(angle) {
@@ -62,6 +63,13 @@ export class Player extends Node {
     const len = vec3.len(c.velocity);
     if (len > c.maxSpeed) {
       vec3.scale(c.velocity, c.velocity, c.maxSpeed / len);
+    }
+
+    if(vec3.len(c.velocity) > 0.1) {
+      this.walking_sound.play();
+    }
+    else {
+      this.walking_sound.pause();
     }
 
     let vel = c.velocity;

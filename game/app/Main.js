@@ -22,7 +22,7 @@ class App extends Application {
   async start() {
     this.tile_sound = new Audio("../common/sounds/tile_sound.mp3");
     this.door_sound = new Audio("../common/sounds/door_sound.mp3");
-    this.rain_sound = new Audio("../common/sounds/rain.mp3");
+    this.rain_sound = new Audio("../common/sounds/rain.mp3");    
 
     this.loader = new GLTFLoader();
     await this.loader.load("../common/models/textures/untitled.gltf");
@@ -33,7 +33,7 @@ class App extends Application {
     this.hotbar_selector = document.getElementsByClassName("selector");    
     this.hotbar = [["hoe", 1], ["watering_can", 1]];
     this.hotbar_index = 0;
-    this.money = 5000;
+    this.money = 100;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");
@@ -355,8 +355,8 @@ class App extends Application {
       let money = 0;
       for(let i = 1; i < this.hotbar.length; i++) {
         switch(this.hotbar[i][0]) {
-          case "salad": money += 6 * this.hotbar[i][1]; break;
-          case "wheat": money += 6 * this.hotbar[i][1]; break;
+          case "salad": money += 7 * this.hotbar[i][1]; break;
+          case "wheat": money += 7 * this.hotbar[i][1]; break;
           case "beetroot": money += 20 * this.hotbar[i][1]; break;
           case "carrot": money += 20 * this.hotbar[i][1]; break;
           case "eggplant": money += 45 * this.hotbar[i][1]; break;
