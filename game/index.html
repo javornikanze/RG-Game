@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>COVID-Defender</title>
+    <title>Greenfield</title>
 
     <link rel="stylesheet" type="text/css" href="../common/style.css" />
-    
+    <link rel="shortcut icon" href="./common/images/carrot_icon.png">
     <script type="text/javascript" src="../lib/dat.gui.min.js"></script>
     <script type="text/javascript" src="../lib/gl-matrix-min.js"></script>
     <script type="module" src="/app/Main.js"></script>
@@ -37,6 +37,12 @@
       <img src="./common/images/wheat_icon.png">
       <br /><br />
 
+      <span>You can use the watering can to make crops grow faster.</span>
+      <br /><br />
+      <img src="./common/images/watering_can_icon.png">
+      <br /><br />
+
+
       <span>When the crops are fully grown, you can collect them with a hoe and then resell them at the Farmers market. 
         You can use the money to buy and plant more crops or to expand your land.</span>
 
@@ -49,39 +55,30 @@
         START GAME
       </button>
     </div>
-    <div class="gameover" id="gameover">
-      <span style="font-size: 36px">GAME OVER</span><br /><br />
-      <span id="result"></span><br /><br /><br />
-      <button id="button2" onclick="location.reload(true)">GO AGAIN</button>
-    </div>
-    <div class="gamewin" id="gamewin">
-      <span style="font-size: 36px">YOU WIN!</span><br /><br /><br /><br />
-      <button id="button2" onclick="location.reload(true)">TRY AGAIN</button>
-    </div>
     <div class="overlay" id="overlay">
       <div><img src="./common/images/coin.png"> <span id="money" class="ui_money">0</span></div>
       <div class="hotbar">
-        <img class = "hotbar_img" src="./common/images/hotbar.png">
-        <img class = "selector" src="./common/images/selector.png">
+        <img class ="hotbar_img" src="./common/images/hotbar.png">
+        <img class ="selector" src="./common/images/selector.png">
 
-        <img class = "selector" id="hoe_icon" src="./common/images/hoe_icon.png">
-        <img class = "selector" id="watering_can_icon" src="./common/images/watering_can_icon.png">
-        <img class = "selector" id="carrot_icon" src="./common/images/carrot_icon.png">
-        <img class = "selector" id="eggplant_icon" src="./common/images/eggplant_icon.png">
-        <img class = "selector" id="salad_icon" src="./common/images/salad_icon.png">
-        <img class = "selector" id="beetroot_icon" src="./common/images/beetroot_icon.png">
-        <img class = "selector" id="pumpkin_icon" src="./common/images/pumpkin_icon.png">        
-        <img class = "selector" id="wheat_icon" src="./common/images/wheat_icon.png">
+        <img class ="selector" id="hoe_icon" src="./common/images/hoe_icon.png">
+        <img class ="selector" id="watering_can_icon" src="./common/images/watering_can_icon.png">
+        <img class ="selector" id="carrot_icon" src="./common/images/carrot_icon.png">
+        <img class ="selector" id="eggplant_icon" src="./common/images/eggplant_icon.png">
+        <img class ="selector" id="salad_icon" src="./common/images/salad_icon.png">
+        <img class ="selector" id="beetroot_icon" src="./common/images/beetroot_icon.png">
+        <img class ="selector" id="pumpkin_icon" src="./common/images/pumpkin_icon.png">        
+        <img class ="selector" id="wheat_icon" src="./common/images/wheat_icon.png">
 
-        <div class = "selector" id="c1" style="margin: left 13px; margin-top: 62px">1</div>
-        <div class = "selector" id="c2" style="margin-left:105px; margin-top: 62px">2</div>
-        <div class = "selector" id="c3" style="margin-left:197px; margin-top: 62px">3</div>
-        <div class = "selector" id="c4" style="margin-left:289px; margin-top: 62px">4</div>
-        <div class = "selector" id="c5" style="margin-left:381px; margin-top: 62px">5</div>
-        <div class = "selector" id="c6" style="margin-left:473px; margin-top: 62px">6</div>      
-        <div class = "selector" id="c7" style="margin-left:565px; margin-top: 62px">7</div>
-        <div class = "selector" id="c8" style="margin-left:657px; margin-top: 62px">8</div>
-        <div class = "selector" id="c9" style="margin-left:749px; margin-top: 62px">9</div>
+        <div class ="selector" id="c1" style="margin: left 13px; margin-top: 62px">1</div>
+        <div class ="selector" id="c2" style="margin-left:105px; margin-top: 62px">2</div>
+        <div class ="selector" id="c3" style="margin-left:197px; margin-top: 62px">3</div>
+        <div class ="selector" id="c4" style="margin-left:289px; margin-top: 62px">4</div>
+        <div class ="selector" id="c5" style="margin-left:381px; margin-top: 62px">5</div>
+        <div class ="selector" id="c6" style="margin-left:473px; margin-top: 62px">6</div>      
+        <div class ="selector" id="c7" style="margin-left:565px; margin-top: 62px">7</div>
+        <div class ="selector" id="c8" style="margin-left:657px; margin-top: 62px">8</div>
+        <div class ="selector" id="c9" style="margin-left:749px; margin-top: 62px">9</div>
 
       </div>
       <div class="shop" id="shop">

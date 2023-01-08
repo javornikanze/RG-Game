@@ -16,7 +16,6 @@ export class WaterParticle extends Node {
   }
 
   update(dt) { 
-    console.log(dt);
     if(this.down)
         this.translation[1] -= this.y * dt;
     else 

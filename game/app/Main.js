@@ -33,7 +33,7 @@ class App extends Application {
     this.hotbar_selector = document.getElementsByClassName("selector");    
     this.hotbar = [["hoe", 1], ["watering_can", 1]];
     this.hotbar_index = 0;
-    this.money = 10000;
+    this.money = 100;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");
@@ -72,6 +72,8 @@ class App extends Application {
     this.shop_sell.addEventListener('click', (e) => this.sellItems(e));
     this.expand_down.addEventListener('click', (e) => this.expandDown(e));
     this.expand_left.addEventListener('click', (e) => this.expandLeft(e));
+    this.gl.canvas.addEventListener('wheel',(e) => this.wheelHandler(e));
+
 
     this.started_game = false;
     this.button.addEventListener('click', (e) => this.afterStart(e));
@@ -388,7 +390,6 @@ class App extends Application {
   }
 
   update() {   
-    console.log(this.started_game);
     const t = (this.time = Date.now());
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
@@ -496,9 +497,9 @@ class App extends Application {
         this.closeDoors();
       }  
 
-      if((j >= 2 && j <= 3) && i == 0 ) {
+      if((j >= 2 && j <= 3) && i == 0 && this.started_game) {
         this.startup.style.display = "initial"; 
-        this.startup.style.height = "500px"; 
+        this.startup.style.height = "620px"; 
         this.button.style.display = "none";      
       }      
       else if(this.started_game){
@@ -596,7 +597,6 @@ class App extends Application {
                 }
               }
             }
-            console.log(i, j);
           }
           else {
             this.keys["Space"] = false;
@@ -665,6 +665,30 @@ class App extends Application {
     this.keys[e.code] = false;
   }
 
+  wheelHandler(e) {
+
+    if (e.deltaY < 0) {
+      this.hotbar_index++;
+    }
+    else if (e.deltaY > 0) {
+      this.hotbar_index--;
+    }
+
+
+    if (this.hotbar_index > 8) {
+        this.hotbar_index = 0;
+    }
+
+    else if (0 > this.hotbar_index ) {
+      this.hotbar_index = 8;
+    }
+
+
+    this.hotbar_selector[0].style.left = " calc(50vw - 432px + calc("+ (this.hotbar_index) +" * 92px)";
+    
+  }
+
+
 }
 window.onload = function () {
   const canvas = document.querySelector("canvas");
@@ -673,8 +697,5 @@ window.onload = function () {
   //gui.add(app, "enableCamera");
 };
 
-function start() {
-  console.log("start");
-}
 
 
