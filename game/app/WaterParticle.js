@@ -3,7 +3,7 @@ import { Node } from "./Node.js";
 export class WaterParticle extends Node {
   constructor(options, model, t) {
     super(options);
-    let s = Math.random() * 0.03 + 0.01;
+    let s = Math.random() * 0.02 + 0.01;
     this.scale = [s, s, s];
     this.mesh = model.mesh;
     this.translation = t;

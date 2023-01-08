@@ -74,7 +74,7 @@ export class Player extends Node {
 
     let vel = c.velocity;
     vec3.scaleAndAdd(c.translation, c.translation, vel, dt);
-    if(c.translation[0] < 0 || c.translation[2] < 0 || c.translation[0] > m * 2 - 1.3 || c.translation[2] > n * 2 - 1.3) {
+    if(c.translation[0] < 0 || c.translation[2] < 0 || c.translation[0] > m * 2 - 1.5 || c.translation[2] > n * 2 - 1.5) {
       let v = [-vel[0], -vel[1], -vel[2]]
       vec3.scaleAndAdd(c.translation, c.translation, v, dt);
       this.stop = true;

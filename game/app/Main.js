@@ -33,7 +33,7 @@ class App extends Application {
     this.hotbar_selector = document.getElementsByClassName("selector");    
     this.hotbar = [["hoe", 1], ["watering_can", 1]];
     this.hotbar_index = 0;
-    this.money = 100;
+    this.money = 10000;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");
@@ -274,7 +274,7 @@ class App extends Application {
        p = new Tile(
         t,
         this.fence_model2,
-        Object.create([this.n_of_columns * 2 - 0.85, 1.45, i * 2]),
+        Object.create([this.n_of_columns * 2 - 1.15, 1.45, i * 2]),
         "fence",
         [0, 0, 0, 0]
       ); 
@@ -292,7 +292,7 @@ class App extends Application {
       p = new Tile(
         t,
         this.fence_model,
-        Object.create([i * 2, 1.45, this.n_of_rows * 2 - 0.85]),
+        Object.create([i * 2, 1.45, this.n_of_rows * 2 - 1.15]),
         "fence",
         [0, 0, 0, 0]
       ); 
