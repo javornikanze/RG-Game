@@ -283,7 +283,7 @@ class App extends Application {
       let p = new Tile(
         t,
         this.fence_model,
-        Object.create([i * 2, 1.45, -1.2]),
+        Object.create([i * 2, 1.45, -1.15]),
         "fence",
         [0, 0, 0, 0]
       ); 
@@ -364,8 +364,8 @@ class App extends Application {
         }
       }
       this.shop_money.innerHTML = money;
-      this.expand_left_cost.innerHTML = (this.n_of_rows - 6) * 500;
-      this.expand_down_cost.innerHTML = (this.n_of_columns - 10) * 500;
+      this.expand_left_cost.innerHTML = (this.n_of_rows - 6) * 250;
+      this.expand_down_cost.innerHTML = (this.n_of_columns - 10) * 250;
     }      
     if (this.scene.doors[1].translation[0] < 11) {
       this.scene.doors[1].translation[0] += 0.025;
