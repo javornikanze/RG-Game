@@ -33,7 +33,7 @@ class App extends Application {
     this.hotbar_selector = document.getElementsByClassName("selector");    
     this.hotbar = [["hoe", 1], ["watering_can", 1]];
     this.hotbar_index = 0;
-    this.money = 100;
+    this.money = 200;
 
     this.carrot_icon = document.getElementById("carrot_icon");
     this.pumpkin_icon = document.getElementById("pumpkin_icon");

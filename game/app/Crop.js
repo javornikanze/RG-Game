@@ -11,7 +11,7 @@ export class Crop extends Node {
     this.spawn_time = Date.now();
     this.state = 0;
     this.updateMatrix();
-    this.random_update_time = Math.random() * 5000 + 30000;    
+    this.random_update_time = Math.random() * 5000 + 40000;    
   }
 
   update() {
@@ -21,7 +21,7 @@ export class Crop extends Node {
         this.scale = this.models[this.state].scale;
         this.state += 1;    
         this.updateMatrix();
-        this.random_update_time = Math.random() * 5000 + 20000;  
+        this.random_update_time = Math.random() * 5000 + 40000;  
     }
   }
 }
